@@ -7,7 +7,7 @@ MAIN_PKG := .
 vendor:
 	$(V)go mod tidy
 	$(V)go mod vendor
-	#$(V)git add vendor
+	$(V)git add vendor
 
 .PHONY: generate
 generate:
