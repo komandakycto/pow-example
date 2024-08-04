@@ -12,8 +12,6 @@ import (
 	"go.uber.org/zap"
 )
 
-//go:generate mockgen -source=server.go -package=service -destination=./../service/mock.go
-
 type QuotesService interface {
 	GetRandomQuote() (string, error)
 }

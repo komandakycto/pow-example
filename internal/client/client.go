@@ -10,8 +10,6 @@ import (
 	"go.uber.org/zap"
 )
 
-//go:generate mockgen -source=client.go -package=service -destination=./../service/mock.go
-
 type Solver interface {
 	SolvePoW(challenge string) string
 }
