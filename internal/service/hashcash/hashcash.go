@@ -1,3 +1,4 @@
+// Package hashcash provides a simple proof-of-work implementation.
 package hashcash
 
 import (

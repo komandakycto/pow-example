@@ -1,3 +1,4 @@
+// Package client implement client for pow server.
 package client
 
 import (

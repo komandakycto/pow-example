@@ -1,3 +1,4 @@
+// Package solver provides a simple proof-of-work solver.
 package solver
 
 import (

@@ -1,3 +1,4 @@
+// Package quotes provides a simple quote service.
 package quotes
 
 import (
@@ -15,7 +16,7 @@ type Quotes struct {
 func New(quotesPath string) (*Quotes, error) {
 	content, err := os.ReadFile(quotesPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read quotes file: %w", err)
 	}
 	quotes := strings.Split(string(content), "\n")
 

@@ -9,10 +9,6 @@ vendor:
 	$(V)go mod vendor
 	$(V)git add vendor
 
-.PHONY: generate
-generate:
-	$(V)go generate -mod=vendor -x ./...
-
 default: build
 
 .PHONY: build
@@ -37,3 +33,7 @@ test:
 .PHONY: run
 run:
 	docker compose up --build
+
+.PHONY: docker-lint
+docker-lint:
+	docker run --rm -v `pwd`:/app -w /app golangci/golangci-lint:v1.59.1 golangci-lint run -v

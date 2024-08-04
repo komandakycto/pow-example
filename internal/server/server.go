@@ -1,3 +1,4 @@
+// Package server provides a simple proof-of-work server.
 package server
 
 import (
@@ -31,6 +32,8 @@ type POWServer struct {
 	wg              sync.WaitGroup
 }
 
+// NewPOWServer creates a new POWServer instance.
+// nolint:exhaustruct,lll
 func NewPOWServer(port int, logger *zap.Logger, quotesService QuotesService, hashcashService HashcashService) *POWServer {
 	return &POWServer{
 		port:            port,
@@ -40,9 +43,15 @@ func NewPOWServer(port int, logger *zap.Logger, quotesService QuotesService, has
 	}
 }
 
+// nolint:cyclop,funlen,errorlint
 func (s *POWServer) handleConnection(ctx context.Context, conn net.Conn) {
 	defer s.wg.Done()
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			s.logger.Error("Error closing connection", zap.Error(err))
+		}
+	}(conn)
 
 	clientAddr := conn.RemoteAddr().String()
 	challenge := s.hashcashService.GenerateChallenge()
@@ -112,7 +121,11 @@ func (s *POWServer) Start(ctx context.Context) error {
 	}
 
 	defer func() {
-		s.listener.Close()
+		err := s.listener.Close()
+		if err != nil {
+			s.logger.Error("Error stopping server", zap.Error(err))
+			return
+		}
 		s.logger.Info("Server stopped")
 	}()
 
