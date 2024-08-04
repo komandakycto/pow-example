@@ -2,6 +2,7 @@ V := @
 
 OUT_DIR := ./build
 MAIN_PKG := .
+COVERPROFILE := covprofile
 
 .PHONY: vendor
 vendor:
@@ -28,7 +29,11 @@ build_verifier:
 
 .PHONY: test
 test:
-	$(V)go test -mod=vendor -v ./...
+	$(V)go test -race -covermode atomic -coverprofile=covprofile ./...
+
+.PHONY: coverage
+coverage: test
+	go tool cover -html=$(COVERPROFILE)
 
 .PHONY: run
 run:
