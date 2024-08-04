@@ -9,8 +9,8 @@ import (
 	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
-	powclient "faraway-test/internal/client"
-	"faraway-test/internal/service/solver"
+	prover "github.com/komandakycto/pow-example/internal/client"
+	"github.com/komandakycto/pow-example/internal/service/solver"
 )
 
 func main() {
@@ -35,6 +35,6 @@ func main() {
 		}
 	}
 
-	client := powclient.New(cfg.ServerAddr, logger, solver.New(cfg.Difficulty))
+	client := prover.New(cfg.ServerAddr, logger, solver.New(cfg.Difficulty))
 	client.Run(ctx)
 }

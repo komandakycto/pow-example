@@ -9,9 +9,9 @@ import (
 	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
 
-	pow "faraway-test/internal/server"
-	"faraway-test/internal/service/hashcash"
-	"faraway-test/internal/service/quotes"
+	verifier "github.com/komandakycto/pow-example/internal/server"
+	"github.com/komandakycto/pow-example/internal/service/hashcash"
+	"github.com/komandakycto/pow-example/internal/service/quotes"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 
 	hashcashService := hashcash.New(cfg.Difficulty)
 
-	server := pow.NewPOWServer(
+	server := verifier.NewPOWServer(
 		cfg.Port,
 		logger,
 		quoteService,

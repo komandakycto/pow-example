@@ -1,4 +1,4 @@
-module faraway-test
+module github.com/komandakycto/pow-example
 
 go 1.22
 
