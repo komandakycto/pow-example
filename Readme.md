@@ -16,9 +16,9 @@ security for our use case.
 
 ### Why Hashcash?
 
-Simplicity: The Hashcash algorithm is straightforward to implement using standard cryptographic hash functions.
-Security: The algorithm is designed to be computationally expensive to solve but easy to verify, making it effective at mitigating DDOS attacks.
-Proven: Hashcash is a proven algorithm, used in various applications, including email spam prevention and cryptocurrency mining.
+* Simplicity: The Hashcash algorithm is straightforward to implement using standard cryptographic hash functions.
+* Security: The algorithm is designed to be computationally expensive to solve but easy to verify, making it effective at mitigating DDOS attacks.
+* Proven: Hashcash is a proven algorithm, used in various applications, including email spam prevention and cryptocurrency mining.
 
 ### Running the Project
 
