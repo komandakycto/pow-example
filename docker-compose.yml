@@ -8,8 +8,9 @@ services:
     container_name: wisdom_server
     environment:
       - POW_SERVER_HTTP_PORT=8080
-      - POW_SERVER_DIFFICULTY=4
+      - POW_SERVER_DIFFICULTY=6
       - POW_SERVER_QUOTES_PATH=/app/quotes.txt
+      - POW_SERVER_WAIT_SOLVING=5
     networks:
       - wisdom_network
 
@@ -20,7 +21,7 @@ services:
     container_name: wisdom_client
     environment:
       - PROVER_SERVER_ADDR=server:8080
-      - PROVER_DIFFICULTY=4
+      - PROVER_DIFFICULTY=6
     depends_on:
       - server
     networks:

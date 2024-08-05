@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"go.uber.org/zap"
 )
@@ -30,20 +31,25 @@ type POWServer struct {
 	listener        net.Listener
 	sessions        sync.Map
 	wg              sync.WaitGroup
+	waitSolving     time.Duration
 }
 
 // NewPOWServer creates a new POWServer instance.
-// nolint:exhaustruct,lll
-func NewPOWServer(port int, logger *zap.Logger, quotesService QuotesService, hashcashService HashcashService) *POWServer {
+//
+//nolint:exhaustruct,lll
+func NewPOWServer(port int, waitSolving time.Duration, logger *zap.Logger, quotesService QuotesService, hashcashService HashcashService) *POWServer {
 	return &POWServer{
 		port:            port,
 		logger:          logger,
 		quotesService:   quotesService,
 		hashcashService: hashcashService,
+		waitSolving:     waitSolving,
 	}
 }
 
-// nolint:cyclop,funlen,errorlint
+// handleConnection handles an individual client connection.
+//
+//nolint:cyclop,errorlint,funlen
 func (s *POWServer) handleConnection(ctx context.Context, conn net.Conn) {
 	defer s.wg.Done()
 	defer func(conn net.Conn) {
@@ -65,10 +71,16 @@ func (s *POWServer) handleConnection(ctx context.Context, conn net.Conn) {
 	}
 
 	buf := make([]byte, 1024)
+	connCtx, cancel := context.WithTimeout(ctx, s.waitSolving)
+	defer cancel()
+
 	for {
 		select {
 		case <-ctx.Done():
-			s.logger.Info("Context cancelled, closing connection", zap.String("clientAddr", clientAddr))
+			s.logger.Info("Server is shutting down, closing connection", zap.String("clientAddr", clientAddr))
+			return
+		case <-connCtx.Done():
+			s.logger.Info("Connection timed out, closing connection", zap.String("clientAddr", clientAddr))
 			return
 		default:
 			n, err := conn.Read(buf)
@@ -112,6 +124,7 @@ func (s *POWServer) handleConnection(ctx context.Context, conn net.Conn) {
 	}
 }
 
+// Start starts the POWServer and listens for incoming connections.
 func (s *POWServer) Start(ctx context.Context) error {
 	addr := ":" + strconv.Itoa(s.port)
 	var err error
@@ -119,15 +132,6 @@ func (s *POWServer) Start(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("error starting server: %w", err)
 	}
-
-	defer func() {
-		err := s.listener.Close()
-		if err != nil {
-			s.logger.Error("Error stopping server", zap.Error(err))
-			return
-		}
-		s.logger.Info("Server stopped")
-	}()
 
 	s.logger.Info("Server is listening", zap.String("address", addr))
 
@@ -139,6 +143,7 @@ func (s *POWServer) Start(ctx context.Context) error {
 			s.logger.Error("Error stopping server", zap.Error(err))
 			return
 		}
+		s.logger.Info("Server stopped")
 	}()
 
 	for {
@@ -158,6 +163,7 @@ func (s *POWServer) Start(ctx context.Context) error {
 	}
 }
 
+// Stop stops the POWServer gracefully.
 func (s *POWServer) Stop() {
 	if s.listener != nil {
 		err := s.listener.Close()

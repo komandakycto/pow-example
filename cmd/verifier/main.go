@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/jessevdk/go-flags"
 	"go.uber.org/zap"
@@ -47,6 +48,7 @@ func main() {
 
 	server := verifier.NewPOWServer(
 		cfg.Port,
+		time.Duration(cfg.WaitSolving)*time.Minute,
 		logger,
 		quoteService,
 		hashcashService,
