@@ -10,6 +10,8 @@ import (
 )
 
 func TestSolvePoW(t *testing.T) {
+	t.Parallel()
+
 	difficulty := 2
 	solver := New(difficulty)
 	challenge := "test-challenge"
@@ -22,6 +24,8 @@ func TestSolvePoW(t *testing.T) {
 }
 
 func TestSolvePoWWithDifferentDifficulties(t *testing.T) {
+	t.Parallel()
+
 	challenges := []string{"challenge1", "challenge2", "challenge3"}
 	difficulties := []int{1, 2, 3, 4}
 

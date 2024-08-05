@@ -12,6 +12,8 @@ import (
 )
 
 func TestHashcash_GenerateChallenge(t *testing.T) {
+	t.Parallel()
+
 	h := New(1)
 
 	challenge1 := h.GenerateChallenge()
@@ -23,6 +25,8 @@ func TestHashcash_GenerateChallenge(t *testing.T) {
 }
 
 func TestHashcash_VerifyPoW(t *testing.T) {
+	t.Parallel()
+
 	h := New(1)
 
 	challenge := h.GenerateChallenge()
