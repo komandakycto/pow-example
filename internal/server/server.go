@@ -76,9 +76,6 @@ func (s *POWServer) handleConnection(ctx context.Context, conn net.Conn) {
 
 	for {
 		select {
-		case <-ctx.Done():
-			s.logger.Info("Server is shutting down, closing connection", zap.String("clientAddr", clientAddr))
-			return
 		case <-connCtx.Done():
 			s.logger.Info("Connection timed out, closing connection", zap.String("clientAddr", clientAddr))
 			return
