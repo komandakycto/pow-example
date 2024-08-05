@@ -29,6 +29,7 @@ func TestHashcash_VerifyPoW(t *testing.T) {
 	nonce := "12345"
 
 	// Create a valid proof of work
+	rand.Seed(42) // Setting a fixed seed for deterministic behavior
 	hash := sha256.Sum256([]byte(challenge + nonce))
 	hashStr := hex.EncodeToString(hash[:])
 	for !strings.HasPrefix(hashStr, "0") {
